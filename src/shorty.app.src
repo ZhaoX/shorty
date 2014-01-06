@@ -1,0 +1,19 @@
+{application, shorty, [
+	{description, "A simple short url service"},
+	{vsn, "1"},
+	{modules, []},
+	{registered, []},
+	{applications, [
+		kernel,
+		stdlib,
+		inets,
+		crypto,
+		cowlib,
+		ranch,
+		cowboy,
+		lager,
+		erlson
+	]},
+	{mod, {shorty_app, []}},
+	{env, []}
+]}.

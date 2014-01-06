@@ -1,0 +1,7 @@
+deps/*
+ebin/*
+log/*
+*.log
+*.log.*
+*.beam
+erl_crash.dump

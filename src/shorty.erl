@@ -18,6 +18,9 @@ start() ->
     ok = application:start(goldrush),
     ok = application:start(lager),
 
+    ok = application:start(bson),
+    ok = application:start(mongodb),
+
     ok = application:start(shorty),
     lager:set_loglevel(lager_console_backend, ?LOG_LEVEL).
 

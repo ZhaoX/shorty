@@ -12,7 +12,8 @@
 		ranch,
 		cowboy,
 		lager,
-		erlson
+		erlson,
+        mongodb
 	]},
 	{mod, {shorty_app, []}},
 	{env, []}

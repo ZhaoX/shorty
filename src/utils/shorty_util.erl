@@ -2,6 +2,8 @@
 
 -compile(export_all).
 
+-include_lib("shorty/include/shorty.hrl").
+
 get_hostname() ->
     {ok, HostName} = inet:gethostname(),
     list_to_binary(HostName).
@@ -13,4 +15,3 @@ generate_response_body(Code, Msg, Data) ->
         {data, Data}
     ],
     list_to_binary(erlson:to_json(Term)).
-

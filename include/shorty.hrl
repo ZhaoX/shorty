@@ -7,12 +7,15 @@
 -define(HTTP_DOMAIN, <<"shorty.com">>).
 
 -define(MONGODB_HOST, "127.0.0.1").
--define(MONGODB_PORT, 20011).
+-define(MONGODB_PORT, 27017).
+-define(DATABASE, shorty).
+-define(COLLECTION_ID, shorty_id).
+-define(COLLECTION_URL, shorty_url).
 
 -define(HOSTNAME, shorty_util:get_hostname()).
 
 -define(ROUTER, [ 
     {'_', [ 
-        {"/create",  create_shorty_handler ,[]} 
+        {"/get_shorty",  get_shorty_handler ,[]} 
     ]} 
 ]).

@@ -21,9 +21,10 @@ try
         _    -> ok
     end,
 
-    % create shorty
-    {ok, NextId} = shorty_mongo:get_next_id(),
-    Shorty = <<?HTTP_DOMAIN/binary, <<"/">>/binary, (list_to_binary(base62:encode(NextId)))/binary>>,
+    % get shorty
+    ShortyProcesser = ?SHORTY_PROCESSER,
+    ShortyCode = ShortyProcesser:get_shorty_code(Url),
+    Shorty = <<?HTTP_DOMAIN/binary, <<"/">>/binary, ShortyCode/binary>>,
 
     % response
     ResponHeader = [
@@ -35,6 +36,7 @@ try
         {shorty, Shorty}
     ],
     ResponseBody = shorty_util:generate_response_body(200, <<"ok">>, ResponseData),
+    lager:debug("response body:~p", [ResponseBody]),
     {ok, Req2} = cowboy_req:reply(200, ResponHeader, ResponseBody, Req1),
     {ok, Req2, State}
 catch

@@ -4,13 +4,22 @@
 
 -include_lib("shorty/include/shorty.hrl").
 
-get_shorty_code(Url) ->
+get_code(Url) ->
     {ok, Conn} = mongo_util:get_connection(?MONGODB_HOST, ?MONGODB_PORT),
     {ok, Id} = get_next_id(Conn),
     Code = list_to_binary(base62:encode(Id)),
     create_shorty(Conn, Url, Code),
     Code.
-    
+
+get_url(Code) ->
+    {ok, Conn} = mongo_util:get_connection(?MONGODB_HOST, ?MONGODB_PORT),
+    Selector = {code, Code},
+    Projector = {url, 1, '_id', 0},
+    Res = mongo_util:find_one(Conn, ?DATABASE, ?COLLECTION_SHORTY, Selector, Projector),
+    case Res of
+       {} -> <<>>;
+       {{url, Url}} -> Url
+    end.
 
 %%---------------------------------------------------------------------------------------------------------
 %% internal functions
@@ -29,4 +38,3 @@ get_next_id(Conn) ->
 create_shorty(Conn, Url, Code) ->
     Values = [{url, Url, code, Code, ctime, now()}], 
     mongo_util:save(Conn, ?DATABASE, ?COLLECTION_SHORTY, Values).
-    

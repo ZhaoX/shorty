@@ -15,7 +15,7 @@
 -define(ROUTER, [ 
     {'_', [ 
         {"/get_shorty",  get_shorty_handler ,  []}, 
-        {"/:code",       redirect_handler ,    []}, 
+        {"/:code",       redirect_handler ,    []} 
     ]} 
 ]).
 

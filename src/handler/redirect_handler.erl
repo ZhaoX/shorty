@@ -1,4 +1,4 @@
--module(get_shorty_handler).
+-module(redirect_handler).
 
 -include_lib("shorty/include/shorty.hrl").
 
@@ -12,32 +12,31 @@ init(_Transport, Req, []) ->
 handle(Req, State) ->
 try
     % check parameter
-    {QS, Req1} = cowboy_req:qs_vals(Req),
-    lager:debug("qs:~p", [QS]),
-    Url	= proplists:get_value(<<"url">>, QS),
-    
-    case Url of
+    {Bindings, Req1} = cowboy_req:bindings(Req),
+    lager:debug("bindings:~p", [Bindings]),
+    Code = proplists:get_value(code, Bindings),
+    case Code of
         <<>> -> erlang:throw({400, <<"bad request">>});
         _    -> ok
     end,
 
-    % get shorty
+    % get url
     ShortyProcesser = ?SHORTY_PROCESSER,
-    ShortyCode = ShortyProcesser:get_code(Url),
-    Shorty = <<?HTTP_DOMAIN/binary, <<"/">>/binary, ShortyCode/binary>>,
+    Url = ShortyProcesser:get_url(Code),
+    case Url of 
+        <<>> -> erlang:throw({404, <<"not found">>});
+        _ -> ok
+    end,
 
     % response
     ResponHeader = [
         {<<"HIT">>, ?HOSTNAME}, 
-        {<<"Content-Type">>, <<"application/json">>}
+        {<<"Location">>, Url}
     ],
-    ResponseData = [
-        {url, Url},
-        {shorty, Shorty}
-    ],
+    ResponseData = [],
     ResponseBody = shorty_util:generate_response_body(200, <<"ok">>, ResponseData),
     lager:debug("response body:~p", [ResponseBody]),
-    {ok, Req2} = cowboy_req:reply(200, ResponHeader, ResponseBody, Req1),
+    {ok, Req2} = cowboy_req:reply(301, ResponHeader, ResponseBody, Req1),
     {ok, Req2, State}
 catch
     throw:{XCode, XMsg} ->

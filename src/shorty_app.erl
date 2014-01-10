@@ -1,6 +1,3 @@
-%% Feel free to use, reuse and abuse the code in this file.
-
-%% @private
 -module(shorty_app).
 -behaviour(application).
 

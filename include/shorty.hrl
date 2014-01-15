@@ -1,5 +1,3 @@
--compile([{parse_transform, lager_transform}]).
-
 -define(HOSTNAME, shorty_util:get_hostname()).
 
 %%-------------------------------------------------------------------------------------------------

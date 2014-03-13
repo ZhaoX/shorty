@@ -24,7 +24,7 @@ try
     % get shorty
     ShortyProcesser = ?SHORTY_PROCESSER,
     ShortyCode = ShortyProcesser:get_code(Url),
-    Shorty = <<?HTTP_DOMAIN/binary, <<"/">>/binary, ShortyCode/binary>>,
+    Shorty = <<?SHORTY_DOMAIN/binary, <<"/">>/binary, ShortyCode/binary>>,
 
     % response
     ResponHeader = [

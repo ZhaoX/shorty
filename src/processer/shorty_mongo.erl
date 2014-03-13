@@ -7,7 +7,7 @@
 get_code(Url) ->
     {ok, Conn} = mongo_util:get_connection(?MONGODB_HOST, ?MONGODB_PORT),
     {ok, Id} = get_next_id(Conn),
-    Code = list_to_binary(base62:encode(Id)),
+    Code = list_to_binary(base62:fix_size(base62:encode(Id), ?SHORTY_SIZE)),
     create_shorty(Conn, Url, Code),
     Code.
 

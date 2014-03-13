@@ -28,6 +28,10 @@ try
         _ -> ok
     end,
 
+    % add access log
+    {ClientIP, _} = cowboy_req:header(<<"x-real-ip">>, Req1),
+    ShortyProcesser:add_access_log(ClientIP, Code, Url), 
+
     % response
     ResponHeader = [
         {<<"HIT">>, ?HOSTNAME}, 

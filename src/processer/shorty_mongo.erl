@@ -29,6 +29,11 @@ get_url(Code) ->
         {{url, Url}} -> Url
     end.
 
+add_access_log(ClientIP, Code, Url) ->
+    {ok, Conn} = mongo_util:get_connection(?MONGODB_HOST, ?MONGODB_PORT),
+    Values = [{client_ip, ClientIP, code, Code, url, Url,  atime, now()}], 
+    mongo_util:save(Conn, ?DATABASE, ?COLLECTION_LOG, Values).
+
 %%---------------------------------------------------------------------------------------------------------
 %% internal functions
 %%---------------------------------------------------------------------------------------------------------

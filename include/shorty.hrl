@@ -36,3 +36,4 @@
 -define(DATABASE, shorty).
 -define(COLLECTION_ID, id).
 -define(COLLECTION_SHORTY, shorty).
+-define(COLLECTION_LOG, log).

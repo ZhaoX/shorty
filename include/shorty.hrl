@@ -26,7 +26,7 @@
 %% mongodb 
 %%-------------------------------------------------------------------------------------------------
 -define(MONGODB_HOST, "127.0.0.1").
--define(MONGODB_PORT, 27017).
+-define(MONGODB_PORT, 24011).
 -define(DATABASE, shorty).
 -define(COLLECTION_ID, id).
 -define(COLLECTION_SHORTY, shorty).

@@ -6,10 +6,18 @@
 
 get_code(Url) ->
     {ok, Conn} = mongo_util:get_connection(?MONGODB_HOST, ?MONGODB_PORT),
-    {ok, Id} = get_next_id(Conn),
-    Code = list_to_binary(base62:fix_size(base62:encode(Id), ?SHORTY_SIZE)),
-    create_shorty(Conn, Url, Code),
-    Code.
+    Selector = {url, Url},
+    Projector = {code, 1, '_id', 0},
+    Res = mongo_util:find_one(Conn, ?DATABASE, ?COLLECTION_SHORTY, Selector, Projector),
+    case Res of
+        {} ->
+            {ok, Id} = get_next_id(Conn),
+            Code = list_to_binary(base62:fix_size(base62:encode(Id), ?SHORTY_SIZE)),
+            create_shorty(Conn, Url, Code),
+            Code;
+        {{code, Code}} ->
+            Code
+    end.
 
 get_url(Code) ->
     {ok, Conn} = mongo_util:get_connection(?MONGODB_HOST, ?MONGODB_PORT),
@@ -17,8 +25,8 @@ get_url(Code) ->
     Projector = {url, 1, '_id', 0},
     Res = mongo_util:find_one(Conn, ?DATABASE, ?COLLECTION_SHORTY, Selector, Projector),
     case Res of
-       {} -> <<>>;
-       {{url, Url}} -> Url
+        {} -> <<>>;
+        {{url, Url}} -> Url
     end.
 
 %%---------------------------------------------------------------------------------------------------------

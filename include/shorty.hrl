@@ -26,7 +26,7 @@
 %%-------------------------------------------------------------------------------------------------
 %% shorty processer
 %%-------------------------------------------------------------------------------------------------
--define(SHORTY_PROCESSER, shorty_mongo).
+-define(SHORTY_PROCESSER, range_shorty_mongo).
 
 %%-------------------------------------------------------------------------------------------------
 %% mongodb 
@@ -37,3 +37,4 @@
 -define(COLLECTION_ID, id).
 -define(COLLECTION_SHORTY, shorty).
 -define(COLLECTION_LOG, log).
+-define(COLLECTION_RANGE_ID, range_id).

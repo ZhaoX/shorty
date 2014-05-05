@@ -14,9 +14,9 @@ get_code(Url) ->
             {ok, Id} = get_next_id(Conn),
             Code = list_to_binary(base62:fix_size(base62:encode(Id), ?SHORTY_SIZE)),
             create_shorty(Conn, Url, Code),
-            Code;
+            {ok, Code};
         {{code, Code}} ->
-            Code
+            {ok, Code}
     end.
 
 get_url(Code) ->
@@ -25,8 +25,8 @@ get_url(Code) ->
     Projector = {url, 1, '_id', 0},
     Res = mongo_util:find_one(Conn, ?DATABASE, ?COLLECTION_SHORTY, Selector, Projector),
     case Res of
-        {} -> <<>>;
-        {{url, Url}} -> Url
+        {} -> {ok, <<>>};
+        {{url, Url}} -> {ok, Url}
     end.
 
 add_access_log(ClientIP, Code, Url) ->

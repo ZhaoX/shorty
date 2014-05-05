@@ -22,7 +22,7 @@ try
 
     % get url
     ShortyProcesser = ?SHORTY_PROCESSER,
-    Url = ShortyProcesser:get_url(Code),
+    {ok, Url} = ShortyProcesser:get_url(Code),
     case Url of 
         <<>> -> erlang:throw({404, <<"not found">>});
         _ -> ok
@@ -40,7 +40,7 @@ try
     ResponseData = [],
     ResponseBody = shorty_util:generate_response_body(200, <<"ok">>, ResponseData),
     lager:debug("response body:~p", [ResponseBody]),
-    {ok, Req2} = cowboy_req:reply(301, ResponHeader, ResponseBody, Req1),
+    {ok, Req2} = cowboy_req:reply(302, ResponHeader, ResponseBody, Req1),
     {ok, Req2, State}
 catch
     throw:{XCode, XMsg} ->

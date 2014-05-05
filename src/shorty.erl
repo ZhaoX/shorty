@@ -18,8 +18,14 @@ start() ->
     ok = application:start(goldrush),
     ok = application:start(lager),
 
-    ok = application:start(bson),
-    ok = application:start(mongodb),
+    case ?SHORTY_PROCESSER of
+      range_shorty_mongo ->
+        ok = application:start(bson),
+        ok = application:start(mongodb);
+      range_shorty_mysql ->
+        my:start_client(),
+        {ok, _} = my:new_datasource(mysql_datasource, ?MYSQL_DATASOURCE)
+    end,
 
     ok = application:start(shorty),
     lager:set_loglevel(lager_console_backend, ?LOG_LEVEL).

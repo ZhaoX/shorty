@@ -24,7 +24,7 @@ start() ->
         ok = application:start(mongodb);
       range_shorty_mysql ->
         my:start_client(),
-        {ok, _} = my:new_datasource(mysql_datasource, ?MYSQL_DATASOURCE)
+        {ok, _} = my:new_datasource(mysql_datasource, ?MYSQL_DATASOURCE, [{when_exhausted_action, grow}, {max_active, 100}, {test_on_borrow, true}, {test_on_return,true}])
     end,
 
     ok = application:start(shorty),

@@ -8,10 +8,12 @@
 
 init() ->
     {ok, Conn} = mongo_util:get_connection(?MONGODB_HOST, ?MONGODB_PORT),
-    create_range(Conn, ?RANGE_NUM-1).
+    create_range(Conn, ?RANGE_NUM-1),
+    mongo_util:close_connection(Conn).
 
 get_code(Url) ->
     {ok, Conn} = mongo_util:get_connection(?MONGODB_HOST, ?MONGODB_PORT),
+    io:format("conn pid:~p~n", [Conn]),
     Selector = {url, Url},
     Projector = {code, 1, '_id', 0},
     Res = mongo_util:find_one(Conn, ?DATABASE, ?COLLECTION_SHORTY, Selector, Projector),

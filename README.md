@@ -1,4 +1,4 @@
 shorty
 ================
 
-a simple short url service
+A short url service written by Erlang.

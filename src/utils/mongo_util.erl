@@ -5,6 +5,9 @@
 get_connection(Host, Port) ->
     mongo_connection:start_link({Host, Port}, []).
 
+close_connection(Conn) ->
+    mongo_connection:stop(Conn).
+
 find_and_modify(Connection, Database, Collection, Query, Update) ->
     find_and_modify(Connection, Database, Collection, Query, Update, false).
 find_and_modify(Connection, Database, Collection, Query, Update, Upsert) ->

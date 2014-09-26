@@ -8,14 +8,16 @@
 
 init() ->
     {ok, Conn} = mongo_util:get_connection(?MONGODB_HOST, ?MONGODB_PORT),
-    create_range(Conn, ?RANGE_NUM-1).
+    create_range(Conn, ?RANGE_NUM-1),
+    mongo_util:close_connection(Conn).
 
 get_code(Url) ->
     {ok, Conn} = mongo_util:get_connection(?MONGODB_HOST, ?MONGODB_PORT),
+    io:format("conn pid:~p~n", [Conn]),
     Selector = {url, Url},
     Projector = {code, 1, '_id', 0},
     Res = mongo_util:find_one(Conn, ?DATABASE, ?COLLECTION_SHORTY, Selector, Projector),
-    case Res of
+    Result = case Res of
         {} ->
             {ok, Id} = get_next_id(Conn),
             Code = list_to_binary(base62:fix_size(base62:encode(Id), ?SHORTY_SIZE)),
@@ -23,22 +25,27 @@ get_code(Url) ->
             {ok, Code};
         {{code, Code}} ->
             {ok, Code}
-    end.
+    end,
+    mongo_util:close_connection(Conn),
+    Result.
 
 get_url(Code) ->
     {ok, Conn} = mongo_util:get_connection(?MONGODB_HOST, ?MONGODB_PORT),
     Selector = {code, Code},
     Projector = {url, 1, '_id', 0},
     Res = mongo_util:find_one(Conn, ?DATABASE, ?COLLECTION_SHORTY, Selector, Projector),
-    case Res of
+    Result = case Res of
         {} -> {ok, <<>>};
         {{url, Url}} -> {ok, Url}
-    end.
+    end,
+    mongo_util:close_connection(Conn),
+    Result.
 
 add_access_log(ClientIP, Code, Url) ->
     {ok, Conn} = mongo_util:get_connection(?MONGODB_HOST, ?MONGODB_PORT),
     Values = [{client_ip, ClientIP, code, Code, url, Url,  atime, now()}], 
-    mongo_util:save(Conn, ?DATABASE, ?COLLECTION_LOG, Values).
+    mongo_util:save(Conn, ?DATABASE, ?COLLECTION_LOG, Values),
+    mongo_util:close_connection(Conn).
 
 %%---------------------------------------------------------------------------------------------------------
 %% internal functions
